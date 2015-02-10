@@ -31,6 +31,8 @@
 #pragma warning(disable : 6294 6031)
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include "highgui.h"
+
 #pragma warning(pop)
 
 #include "OpenCVFrameHelper.h"

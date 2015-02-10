@@ -24,6 +24,47 @@ using namespace cv;
 using namespace Microsoft::KinectBridge;
 using namespace std;
 
+
+INT_PTR CALLBACK CMainWindow::handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMsg,
+					  _In_  WPARAM wParam, 
+					  _In_  LPARAM lParam)
+{
+	 switch (uMsg)
+	 {
+        case WM_COMMAND  :
+        {
+			int wmID = LOWORD(wParam);
+            int wmEvent = HIWORD(wParam);
+            switch (wmEvent)
+            {
+				case BN_CLICKED:
+                {
+                   m_saveImage=true;
+				}
+                break;
+			}	  
+        }
+        break;
+		case WM_CLOSE:
+        {
+          DestroyWindow(hwndDlg);
+        }
+        break;
+	 }
+
+	 return 0;
+}
+
+bool CMainWindow::m_saveImage = false;
+
+void  CMainWindow::savePicture(string filename){
+    if(m_saveImage){
+	  cv::imwrite("C:/Users/user/Desktop/kwolek/dataset/img1.jpg", m_depthMat);
+	  m_saveImage=false;
+	}
+}
+
+
 // Entry point for the application
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
@@ -66,6 +107,7 @@ CMainWindow::CMainWindow() :
     m_hDepthBitmapMutex(NULL),
     m_hPaintWindowMutex(NULL)
 {
+	//m_saveImage=false;
 }
 
 /// <summary>
@@ -374,6 +416,13 @@ LRESULT CALLBACK CMainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 				    m_vibe=!m_vibe;
 					CheckMenuItem(hMenu, wmID, m_vibe ? MF_CHECKED : MF_UNCHECKED);
 				}
+			case IDM_SAVE_PICTURE:
+				{
+			      HWND hDlg;
+                  hDlg = CreateDialogParam(NULL, MAKEINTRESOURCE(IDD_DIALOG1), 0, handleSaveImage, 0);
+				  
+				  ShowWindow(hDlg, SW_SHOW);
+			    }
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
@@ -607,7 +656,9 @@ DWORD WINAPI CMainWindow::ProcessThread()
 					m_openCVHelper.applyVime(&m_depthMat);
 				}
 			
-                // Update bitmap for drawing
+				savePicture("C:/Users/user/Desktop/kwolek/dataset");
+                
+				// Update bitmap for drawing
                 WaitForSingleObject(m_hDepthBitmapMutex, INFINITE);
                 UpdateBitmap(&m_depthMat, &m_hDepthBitmap, &m_bmiDepth);
                 ReleaseMutex(m_hDepthBitmapMutex);

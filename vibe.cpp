@@ -1,9 +1,11 @@
 #include "vibe.h"
 
-int metric(uchar x,uchar y){
-	int x0 = (int) x;
-	int y0 = (int) y;
-	return abs(x-y);
+uchar inline metric(uchar  x,uchar y){
+	
+	if(x<y){
+		return y-x;
+	}
+	return x-y;
 }
 
 VibeParams::VibeParams(){
@@ -13,7 +15,7 @@ VibeParams::VibeParams(){
     this->subsamplingFactor = 16;  
 }
 
-VibeParams::VibeParams(int nbSamples,int reqMatches,int radius,int subsamplingFactor){
+VibeParams::VibeParams(uchar nbSamples,uchar reqMatches,uchar radius,uchar subsamplingFactor){
     this->nbSamples = nbSamples;                  
     this->reqMatches = reqMatches;                   
     this->radius = radius;                     
@@ -44,8 +46,8 @@ int BackgroundModel::compare(int x,int y,uchar point ,VibeParams * vibeParams){
 	int count = 0,index=0;
 	while ((count < vibeParams->reqMatches) && (index < nbSamples)){
 		uchar sample = samples[x][y][index];
-		if(metric(point,sample) < vibeParams->radius){
-		//if(sample==point){
+		uchar distance=metric(point,sample);
+		if(distance < vibeParams->radius){
 			count++;
 		}
 		index++;
@@ -60,7 +62,7 @@ void BackgroundModel::updateNeighbor(int x,int y,uchar point ,VibeParams * vibeP
 
 	x0+= x;
 	y0+= y;
-	if(x0<0){
+	/*if(x0<0){
 		x0=0;
 	}
 	if(y0<0){
@@ -71,7 +73,7 @@ void BackgroundModel::updateNeighbor(int x,int y,uchar point ,VibeParams * vibeP
 	}
 	if(y0>= this->width){
 		y0=0;
-	}
+	}*/
 	samples[x0][y0][vibeParams->getRand()]=point;
 }
 
@@ -104,19 +106,32 @@ DepthImage::DepthImage(Mat * img){
 		this->height=240;
 		this->width=320;
 	}
+	pointer=data->ptr<uchar>(0);
 }
 
 void  DepthImage::set(int x,int y,uchar value){
-    uchar* p=data->ptr<uchar>(0);
 	int i=index(x,y);
-	p[i] =value;
-	p[i+1] =value;
-	p[i+2] =value;
+	pointer[i] =value;
+	pointer[i+1] =value;
+	pointer[i+2] =value;
 }
 
 uchar  DepthImage::get(int x,int y){
-    uchar* p=data->ptr<uchar>(0);
-	return p[index(x,y)];
+	return pointer[index(x,y)];
+}
+
+bool DepthImage::empty(int x,int y){
+   return 0!=get(x,y);
+}
+
+bool  DepthImage::inLimitX(double x){
+	int x0=floor(x);
+	return 0<=x0 && x0<=this->height;  
+}
+
+bool  DepthImage::inLimitY(double y){
+	int y0=floor(y);
+	return 0<=y0 && y0<=this->height;  
 }
 
 DepthImage* DepthImage::clone(){
@@ -133,17 +148,18 @@ int DepthImage::index(int x,int y){
 
 static BackgroundModel * model=NULL;
 
+
 void vibe(Mat * image,VibeParams * params){
 	DepthImage * dimage=new DepthImage(image);
 	if(model==NULL){
         model =new  BackgroundModel(dimage,params);
 	}
-	for(int i=0;i<dimage->height;i++){
-		for(int j=0;j<dimage->width;j++){
-			//*uchar point=dimage->get(i,j);
-			//int count=model->compare(i,j,point,params);
-			//bool isInBackground=  (count >= params->reqMatches);
-			/*if(isInBackground){
+	for(int i=1;i<dimage->height-1;i++){
+		for(int j=1;j<dimage->width-1;j++){
+			 uchar point=dimage->get(i,j);
+			int count=model->compare(i,j,point,params);
+			bool isInBackground=  (count >= params->reqMatches);
+			if(isInBackground){
 				if(params->decideUpdate()){
 				  model->update(i,j,point ,params);
 				}
@@ -152,8 +168,7 @@ void vibe(Mat * image,VibeParams * params){
 				}
                 dimage->set(i,j,255);
 		    }else{
-			    //set(i,j,saturate_cast<uchar>(255),image);
-			}*/
+			}
 	   }
 	}
 }

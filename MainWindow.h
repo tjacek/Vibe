@@ -58,7 +58,10 @@ class CMainWindow
 	static const int BITMAP_VERTICAL_BORDER_PADDING = 10;
 	static const int MENU_BAR_HORIZONTAL_BORDER_PADDING = 5;
 
+
 public:
+	static bool m_saveImage;
+
     // Functions:
     /// <summary>
     /// Constructor
@@ -70,6 +73,7 @@ public:
     /// </summary>
     ~CMainWindow();
 
+	static INT_PTR CALLBACK handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMsg,_In_  WPARAM wParam, _In_  LPARAM lParam);
     /// <summary>
     /// Runs the application
     /// </summary>
@@ -151,6 +155,7 @@ private:
     /// <param name="hMenu">menu to initialize</param>
     void InitSettings(HMENU hMenu);
 
+    void savePicture(string filename);
     /// <summary>
     /// Initializes the first available Kinect found
     /// </summary>
@@ -282,7 +287,7 @@ private:
 
 	// OpenCV matrices
 	Mat m_colorMat;
-	Mat m_depthMat;
+    Mat m_depthMat;
 
     // Bitmaps
     BITMAPINFO m_bmiColor;

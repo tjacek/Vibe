@@ -9,13 +9,13 @@ using namespace cv;
 
 class VibeParams{
   public:
-   int nbSamples;                   
-   int reqMatches;                   
-   int radius;                      
-   int subsamplingFactor; 
+   uchar nbSamples;                   
+   uchar reqMatches;                   
+   uchar radius;                      
+   uchar subsamplingFactor; 
 
    VibeParams();
-   VibeParams(int nbSamples,int reqMatches,int radius,int subsamplingFactor);
+   VibeParams(uchar nbSamples,uchar reqMatches,uchar radius,uchar subsamplingFactor);
 
    int getRand();
    bool decideUpdate();
@@ -29,8 +29,13 @@ class DepthImage{
       DepthImage(Mat * img);
 	  void set(int x,int y,uchar value);
 	  uchar get(int x,int y);
+	  bool empty(int x,int y);
+	  bool inLimitX(double x);
+	  bool inLimitY(double y);
+
 	  DepthImage * clone();
   private:
+	  uchar*  pointer;
 	  int index(int x,int y);
 };
 

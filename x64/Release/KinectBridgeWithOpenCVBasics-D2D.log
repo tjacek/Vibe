@@ -1,0 +1,17 @@
+﻿Build started 2015-01-15 22:20:39.
+     1>Project "C:\Users\user\Desktop\kwolek\vibe\KinectBridgeWithOpenCVBasics-D2D.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /I"C:\OpenCV-2.4.2\opencv\build\include\opencv" /I"C:\OpenCV-2.4.2\opencv\build\include" /Zi /nologo /W3 /WX- /O2 /Oi /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc110.pdb" /Gd /TP /errorReport:prompt MainWindow.cpp OpenCVFrameHelper.cpp OpenCVHelper.cpp vibe.cpp
+         MainWindow.cpp
+     1>c:\users\user\desktop\kwolek\vibe\vibe.h(5): fatal error C1083: Cannot open include file: 'opencv2/core/core.hpp': No such file or directory
+         OpenCVFrameHelper.cpp
+     1>c:\users\user\desktop\kwolek\vibe\OpenCVFrameHelper.h(27): fatal error C1083: Cannot open include file: 'opencv2/core/core.hpp': No such file or directory
+         OpenCVHelper.cpp
+     1>c:\users\user\desktop\kwolek\vibe\vibe.h(5): fatal error C1083: Cannot open include file: 'opencv2/core/core.hpp': No such file or directory
+         vibe.cpp
+     1>c:\users\user\desktop\kwolek\vibe\vibe.h(5): fatal error C1083: Cannot open include file: 'opencv2/core/core.hpp': No such file or directory
+     1>Done Building Project "C:\Users\user\Desktop\kwolek\vibe\KinectBridgeWithOpenCVBasics-D2D.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.46
