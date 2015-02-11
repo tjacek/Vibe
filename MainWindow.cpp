@@ -24,6 +24,28 @@ using namespace cv;
 using namespace Microsoft::KinectBridge;
 using namespace std;
 
+string * WCHARToString(const WCHAR * wc){
+    //convert from wide char to narrow char array
+    char ch[260];
+    char DefChar = ' ';
+    WideCharToMultiByte(CP_ACP,0,wc,-1, ch,260,&DefChar, NULL);
+    
+    //A std:string  using the char* constructor.
+    return new string(ch);
+}
+
+std::wstring getText( HWND hwnd)
+{
+    int length = SendMessage(hwnd,WM_GETTEXTLENGTH,0,0);
+    if(length == -1)
+        return L"";
+    wchar_t* buffer = new wchar_t[length+1];
+    SendMessage(hwnd,WM_GETTEXT,length+1,(LPARAM)buffer);
+    std::wstring str(buffer);
+    delete[] buffer;
+
+    return str;
+}
 
 INT_PTR CALLBACK CMainWindow::handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMsg,
 					  _In_  WPARAM wParam, 
@@ -39,6 +61,12 @@ INT_PTR CALLBACK CMainWindow::handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMs
             {
 				case BN_CLICKED:
                 {
+				   HWND hWndEdit= GetDlgItem(hwndDlg, IDM_FILE_NAME);
+	               wstring tmp=getText(hWndEdit);
+				   const WCHAR*  tmp2=tmp.c_str();
+				   string * str=WCHARToString(tmp2);
+				   imageFileName= str;
+
                    m_saveImage=true;
 				}
                 break;
@@ -56,11 +84,16 @@ INT_PTR CALLBACK CMainWindow::handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMs
 }
 
 bool CMainWindow::m_saveImage = false;
+void * CMainWindow::imageFileName=NULL;
 
 void  CMainWindow::savePicture(string filename){
     if(m_saveImage){
+		
       connectedCommponents(new DepthImage(&m_depthMat));
-	  cv::imwrite("C:/Users/user/Desktop/kwolek/dataset/img1.jpg", m_depthMat);
+	  string path="C:/Users/user/Desktop/kwolek/dataset/";
+	  string * str= (string*)imageFileName;
+	  path+= *str +".jpg";
+	  cv::imwrite(path, m_depthMat);
 	  m_saveImage=false;
 	}
 }

@@ -28,7 +28,8 @@
 #include <sstream>
 #include "time.h"
 #include "math.h"
-
+//#include <tchar.h> 
+//#include <strsafe.h>
 #include <NuiApi.h>
 
 #include "OpenCVHelper.h"
@@ -57,11 +58,11 @@ class CMainWindow
 	// Padding
 	static const int BITMAP_VERTICAL_BORDER_PADDING = 10;
 	static const int MENU_BAR_HORIZONTAL_BORDER_PADDING = 5;
-
-
+	
 public:
-	static bool m_saveImage;
+	static void * imageFileName;
 
+	static bool m_saveImage;
     // Functions:
     /// <summary>
     /// Constructor
