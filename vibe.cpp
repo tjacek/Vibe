@@ -121,7 +121,7 @@ uchar  DepthImage::get(int x,int y){
 }
 
 bool DepthImage::empty(int x,int y){
-   return 0!=get(x,y);
+   return 255!=get(x,y);
 }
 
 bool  DepthImage::inLimitX(double x){
@@ -148,7 +148,6 @@ int DepthImage::index(int x,int y){
 
 static BackgroundModel * model=NULL;
 
-
 void vibe(Mat * image,VibeParams * params){
 	DepthImage * dimage=new DepthImage(image);
 	if(model==NULL){
@@ -171,4 +170,94 @@ void vibe(Mat * image,VibeParams * params){
 			}
 	   }
 	}
+}
+
+void connectedCommponents(DepthImage * dimage){
+  int ** relation=new int*[dimage->height];
+  for(int i=0;i<dimage->height;i++){
+    relation[i]=new int[dimage->width];
+  }
+  init(  relation,dimage->height,dimage->width);
+  int maxComponentSize=0;
+  int maxComponent=1;
+  int currentComponent=1;
+  for(int i=1;i<dimage->height-1;i++){
+	for(int j=1;j<dimage->width-1;j++){
+        if(relation[i][j]==0){
+			int sizeOfComponent=markComponent(i,j,currentComponent,relation,dimage);
+			if(maxComponentSize<sizeOfComponent ){
+				maxComponentSize=sizeOfComponent;
+				maxComponent=currentComponent;
+			}
+			currentComponent++;
+		}
+	}
+  }
+  clean(maxComponent,relation,dimage);
+}
+
+void init(int **  table,int height,int width){
+  for(int i=0;i<height;i++){
+	  table[i][0]=-1;
+	  table[i][width-1]=-1;
+  }
+  for(int j=0;j<width;j++){
+	  table[0][j]=-1;
+	  table[height-1][j]=-1;
+  }
+  for(int i=1;i<height-1;i++){
+    for(int j=1;j<width-1;j++){
+	  table[i][j]=0;	 
+    }
+  }
+}
+bool checkBounds(int x,int y,int ** relation,DepthImage * dimage){
+  if(x<=0){
+	return false;
+  }
+  
+  if(y<=0){
+	return false;
+  }
+
+  if(dimage->height <=x){
+	return false;
+  }
+
+  if(dimage->width <=y){
+	return false;
+  }
+
+  return true;
+}
+
+int markComponent(int x,int y,int componentNumber,int ** relation,DepthImage * dimage){
+   if(checkBounds( x, y, relation,dimage)){
+   uchar value=dimage->get(x,y);
+   int numberOfPixels=0;
+   if(relation[x][y]==0 &value!=255){
+     relation[x][y]=componentNumber;
+	 numberOfPixels+=markComponent(x  ,y+1,componentNumber,relation, dimage);
+	 numberOfPixels+=markComponent(x+1,y  ,componentNumber,relation, dimage);
+     numberOfPixels+=markComponent(x+1,y+1,componentNumber,relation, dimage);
+	 numberOfPixels+=markComponent(x  ,y-1,componentNumber,relation, dimage);
+	 numberOfPixels+=markComponent(x-1,y  ,componentNumber,relation, dimage);
+	 numberOfPixels+=markComponent(x-1,y-1,componentNumber,relation, dimage);
+     numberOfPixels+=markComponent(x-1,y+1,componentNumber,relation, dimage);
+	 numberOfPixels+=markComponent(x+1,y-1,componentNumber,relation, dimage);
+	 numberOfPixels+=1;
+	 return numberOfPixels;
+     }
+   }
+   return 0 ;
+}
+
+void clean(int maxComponent,int ** relation,DepthImage * dimage){
+  for(int i=0;i<dimage->height;i++){
+	for(int j=0;j<dimage->width;j++){
+	  if(relation[i][j]!=maxComponent){
+		  dimage->set(i,j,255);
+	  }
+	}
+  }
 }

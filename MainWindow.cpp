@@ -59,6 +59,7 @@ bool CMainWindow::m_saveImage = false;
 
 void  CMainWindow::savePicture(string filename){
     if(m_saveImage){
+      connectedCommponents(new DepthImage(&m_depthMat));
 	  cv::imwrite("C:/Users/user/Desktop/kwolek/dataset/img1.jpg", m_depthMat);
 	  m_saveImage=false;
 	}
