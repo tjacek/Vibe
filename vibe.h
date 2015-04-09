@@ -61,5 +61,5 @@ extern uchar get(int x,int y,Mat * image);
 extern void vibe(Mat * image,VibeParams * params);
 extern void connectedCommponents(DepthImage * dimage);
 extern void init(int **  table,int height,int width);
-extern int markComponent(int x,int y,int componentNumber,int ** relation,DepthImage * dimage);
+extern int markComponent(int x,int y,int componentNumber,int ** relation,DepthImage * dimage,int iter);
 extern void clean(int maxComponent,int ** relation,DepthImage * dimage);

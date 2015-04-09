@@ -120,6 +120,8 @@ private:
 	/// <param name="pUserData">additional data</param>
 	static void CALLBACK StatusProc(HRESULT hrStatus, const OLECHAR* instanceName, const OLECHAR* uniqueDeviceName, void * pUserData);
 
+
+	
     /// <summary>
     /// Thread to handle Kinect processing, calls class instance thread processor
     /// </summary>

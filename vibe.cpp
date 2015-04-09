@@ -12,7 +12,7 @@ VibeParams::VibeParams(){
     this->nbSamples = 10;                  
     this->reqMatches = 1;                   
     this->radius = 2;                     
-    this->subsamplingFactor = 16;  
+    this->subsamplingFactor = 17;  
 }
 
 VibeParams::VibeParams(uchar nbSamples,uchar reqMatches,uchar radius,uchar subsamplingFactor){
@@ -180,11 +180,11 @@ void connectedCommponents(DepthImage * dimage){
   init(  relation,dimage->height,dimage->width);
   int maxComponentSize=0;
   int maxComponent=1;
-  int currentComponent=1;
+  int currentComponent=2;
   for(int i=1;i<dimage->height-1;i++){
 	for(int j=1;j<dimage->width-1;j++){
         if(relation[i][j]==0){
-			int sizeOfComponent=markComponent(i,j,currentComponent,relation,dimage);
+			int sizeOfComponent=markComponent(i,j,currentComponent,relation,dimage,1000);
 			if(maxComponentSize<sizeOfComponent ){
 				maxComponentSize=sizeOfComponent;
 				maxComponent=currentComponent;
@@ -231,20 +231,35 @@ bool checkBounds(int x,int y,int ** relation,DepthImage * dimage){
   return true;
 }
 
-int markComponent(int x,int y,int componentNumber,int ** relation,DepthImage * dimage){
-   if(checkBounds( x, y, relation,dimage)){
+int markComponent(int x,int y,int componentNumber,int ** relation,DepthImage * dimage,int iter){
+  /*if(componentNumber<2){
+	  return 0;
+  }*/
+
+	if(iter<0){
+		return 0;
+	}
+  if(checkBounds( x, y, relation,dimage)){
+   if(relation[x][y]!=0){
+	   return 0;
+   }
    uchar value=dimage->get(x,y);
    int numberOfPixels=0;
-   if(relation[x][y]==0 &value!=255){
+
+   if(relation[x][y]==0 && value==255){
+	   relation[x][y]=1;
+	   return 0;
+   }
+   if(relation[x][y]==0 && value!=255){
      relation[x][y]=componentNumber;
-	 numberOfPixels+=markComponent(x  ,y+1,componentNumber,relation, dimage);
-	 numberOfPixels+=markComponent(x+1,y  ,componentNumber,relation, dimage);
-     numberOfPixels+=markComponent(x+1,y+1,componentNumber,relation, dimage);
-	 numberOfPixels+=markComponent(x  ,y-1,componentNumber,relation, dimage);
-	 numberOfPixels+=markComponent(x-1,y  ,componentNumber,relation, dimage);
-	 numberOfPixels+=markComponent(x-1,y-1,componentNumber,relation, dimage);
-     numberOfPixels+=markComponent(x-1,y+1,componentNumber,relation, dimage);
-	 numberOfPixels+=markComponent(x+1,y-1,componentNumber,relation, dimage);
+	 numberOfPixels+=markComponent(x  ,y+1,componentNumber,relation, dimage,iter-1);
+	 numberOfPixels+=markComponent(x+1,y  ,componentNumber,relation, dimage,iter-1);
+     numberOfPixels+=markComponent(x+1,y+1,componentNumber,relation, dimage,iter-1);
+	 numberOfPixels+=markComponent(x  ,y-1,componentNumber,relation, dimage,iter-1);
+	 numberOfPixels+=markComponent(x-1,y  ,componentNumber,relation, dimage,iter-1);
+	 numberOfPixels+=markComponent(x-1,y-1,componentNumber,relation, dimage,iter-1);
+     numberOfPixels+=markComponent(x-1,y+1,componentNumber,relation, dimage,iter-1);
+	 numberOfPixels+=markComponent(x+1,y-1,componentNumber,relation, dimage,iter-1);
 	 numberOfPixels+=1;
 	 return numberOfPixels;
      }

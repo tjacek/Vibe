@@ -44,6 +44,9 @@
     <ClInclude Include="vibe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SaveImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OpenCVHelper.cpp">

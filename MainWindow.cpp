@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 #include "MainWindow.h"
-
+#include "SaveImage.h"
 using namespace cv;
 using namespace Microsoft::KinectBridge;
 using namespace std;
@@ -61,7 +61,7 @@ INT_PTR CALLBACK CMainWindow::handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMs
             {
 				case BN_CLICKED:
                 {
-				   HWND hWndEdit= GetDlgItem(hwndDlg, IDM_FILE_NAME);
+				   HWND hWndEdit= GetDlgItem(hwndDlg, ID_FILENAME_EDIT);
 	               wstring tmp=getText(hWndEdit);
 				   const WCHAR*  tmp2=tmp.c_str();
 				   string * str=WCHARToString(tmp2);
@@ -92,8 +92,9 @@ void  CMainWindow::savePicture(string filename){
       connectedCommponents(new DepthImage(&m_depthMat));
 	  string path="C:/Users/user/Desktop/kwolek/dataset/";
 	  string * str= (string*)imageFileName;
-	  path+= *str +".jpg";
-	  cv::imwrite(path, m_depthMat);
+	  path+= *str +".png";
+	//  cv::imwrite(path, m_depthMat);
+//	  savePngFile(path,m_depthMat);
 	  m_saveImage=false;
 	}
 }
