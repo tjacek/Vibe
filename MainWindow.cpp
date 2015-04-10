@@ -453,9 +453,19 @@ LRESULT CALLBACK CMainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 				}
 			case IDM_SAVE_PICTURE:
 				{
+					
+                  const char * FormatItems[] = { "BINARY", "PNG" };
 			      HWND hDlg;
                   hDlg = CreateDialogParam(NULL, MAKEINTRESOURCE(IDD_DIALOG1), 0, handleSaveImage, 0);
-				  
+				  HWND combobox= GetDlgItem(hDlg, ID_COMBOBOX);
+				  SendMessage(combobox,
+                        CB_ADDSTRING,
+                        0,
+                        reinterpret_cast<LPARAM>((LPCTSTR)FormatItems[0]));
+                  SendMessage(combobox,
+                        CB_ADDSTRING,
+                        0,
+                        reinterpret_cast<LPARAM>((LPCTSTR)FormatItems[1]));
 				  ShowWindow(hDlg, SW_SHOW);
 			    }
             default:
