@@ -1,4 +1,4 @@
-﻿Build started 2015-04-10 22:56:11.
+﻿Build started 2015-04-11 21:26:55.
      1>Project "C:\Users\user\Desktop\kwolek\vibe\KinectBridgeWithOpenCVBasics-D2D.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\opencv2410\build\include\opencv2 /IC:\opencv2410\build\include /IC:\opencv2410\build\include\opencv /I"C:\Program Files (x86)\GnuWin32\include\libpng12" /I"C:\Program Files (x86)\GnuWin32\include" /Zi /nologo /W3 /WX- /Od /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt MainWindow.cpp
@@ -20,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.95
+Time Elapsed 00:00:02.69
