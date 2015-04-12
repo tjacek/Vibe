@@ -34,6 +34,7 @@
 
 #include "OpenCVHelper.h"
 #include "FrameRateTracker.h"
+#include "SaveImage.h"
 
 class CMainWindow
 {
@@ -62,7 +63,7 @@ class CMainWindow
 public:
 	static void * imageFileName;
 
-	static bool m_saveImage;
+	static SaveImageParam * m_saveImage;
     // Functions:
     /// <summary>
     /// Constructor

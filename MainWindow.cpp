@@ -34,19 +34,6 @@ string * WCHARToString(const WCHAR * wc){
     return new string(ch);
 }
 
-std::wstring getText( HWND hwnd)
-{
-    int length = SendMessage(hwnd,WM_GETTEXTLENGTH,0,0);
-    if(length == -1)
-        return L"";
-    wchar_t* buffer = new wchar_t[length+1];
-    SendMessage(hwnd,WM_GETTEXT,length+1,(LPARAM)buffer);
-    std::wstring str(buffer);
-    delete[] buffer;
-
-    return str;
-}
-
 INT_PTR CALLBACK CMainWindow::handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMsg,
 					  _In_  WPARAM wParam, 
 					  _In_  LPARAM lParam)
@@ -62,12 +49,8 @@ INT_PTR CALLBACK CMainWindow::handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMs
 				case BN_CLICKED:
                 {
 				   HWND hWndEdit= GetDlgItem(hwndDlg, ID_FILENAME_EDIT);
-	               wstring tmp=getText(hWndEdit);
-				   const WCHAR*  tmp2=tmp.c_str();
-				   string * str=WCHARToString(tmp2);
-				   imageFileName= str;
-
-                   m_saveImage=true;
+	             
+                   m_saveImage=new SaveImageParam(hWndEdit);
 				}
                 break;
 			}	  
@@ -83,19 +66,19 @@ INT_PTR CALLBACK CMainWindow::handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMs
 	 return 0;
 }
 
-bool CMainWindow::m_saveImage = false;
+SaveImageParam * CMainWindow::m_saveImage = NULL;
 void * CMainWindow::imageFileName=NULL;
 
 void  CMainWindow::savePicture(string filename){
-    if(m_saveImage){
-		
-      connectedCommponents(new DepthImage(&m_depthMat));
-	  string path="C:/Users/user/Desktop/kwolek/dataset/";
-	  string * str= (string*)imageFileName;
-	  path+= *str +".png";
-	//  cv::imwrite(path, m_depthMat);
-//	  savePngFile(path,m_depthMat);
-	  m_saveImage=false;
+    if(m_saveImage!=NULL){
+	  if(m_saveImage->counter>0){
+		m_saveImage->addFrame(m_depthMat);
+		m_saveImage->counter--;
+	  }else{
+	    saveAction(m_saveImage);	
+	    delete m_saveImage;
+	    m_saveImage=NULL;
+	  }
 	}
 }
 
