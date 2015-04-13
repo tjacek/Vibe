@@ -35,9 +35,10 @@ void saveAction(SaveImageParam * params){
 }
 
 void saveJPG(SaveImageParam * params){
-  CreateDirectory( (LPCTSTR)params->filename.c_str(), NULL);
+  wstring wstr(params->filename.begin(),params->filename.end());
+  CreateDirectory( (LPCTSTR)wstr.c_str(), NULL);
 
-  string dir(params->filename.begin(),params->filename.end()); 
+  string dir =params->filename;// (params->filename.begin(),params->filename.end()); 
   dir+="/frame";
   for(int i=0;i<params->numberOfFrames;i++){
 	  std::ostringstream ss;
@@ -88,13 +89,18 @@ void writeActionHeader(FILE * fp  , int nFrames, int nCols, int nRows){
 
 bool getSelectedItem(HWND combobox){
   int itemIndex = SendMessage((HWND) combobox, (UINT) CB_GETCURSEL, (WPARAM) 0, (LPARAM) 0);
-  if(itemIndex==0){
+
+  TCHAR  ListItem[256];
+                        (TCHAR) SendMessage((HWND) combobox, (UINT) CB_GETLBTEXT, 
+                            (WPARAM) itemIndex, (LPARAM) ListItem);
+  wstring item(ListItem);
+ 
+  if(item==L"JPG"){
+	   MessageBox(NULL, (LPCWSTR) item.c_str(), TEXT("Item Selected"), MB_OK);
 	return true;
   }else{
 	return false;
   }
-  //TCHAR FormatItems[9][10] =  { TEXT("BINARY"), TEXT("PNG") };	
-  //     MessageBox(hwndDlg, (LPCWSTR) ListItem, TEXT("Item Selected"), MB_OK);    
 }
 
 string getText( HWND hwnd)
@@ -105,8 +111,6 @@ string getText( HWND hwnd)
     wchar_t* buffer = new wchar_t[length+1];
     SendMessage(hwnd,WM_GETTEXT,length+1,(LPARAM)buffer);
     std::wstring  wstr(buffer);
-	//CW2T pszT(wstr.c_str());
-	//MessageBox(hwnd, pszT, TEXT("Item Selected"), MB_OK);
 
 	delete[] buffer;
     std::string s( wstr.begin(), wstr.end() );

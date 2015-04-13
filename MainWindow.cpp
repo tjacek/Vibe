@@ -435,7 +435,7 @@ LRESULT CALLBACK CMainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 			case IDM_SAVE_PICTURE:
 				{
 					
-                  TCHAR FormatItems[9][10] =  { TEXT("BINARY"), TEXT("PNG") };
+                  TCHAR FormatItems[9][10] =  { TEXT("BINARY"), TEXT("JPG") };
 			      HWND hDlg;
                   hDlg = CreateDialogParam(NULL, MAKEINTRESOURCE(IDD_DIALOG1), 0, handleSaveImage, 0);
 				  HWND combobox= GetDlgItem(hDlg, ID_COMBOBOX);
