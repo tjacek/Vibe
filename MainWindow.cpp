@@ -47,10 +47,8 @@ INT_PTR CALLBACK CMainWindow::handleSaveImage(_In_  HWND hwndDlg, _In_  UINT uMs
             switch (wmEvent)
             {
 				case BN_CLICKED:
-                {
-				   HWND hWndEdit= GetDlgItem(hwndDlg, ID_FILENAME_EDIT);
-	             
-                   m_saveImage=new SaveImageParam(hWndEdit);
+                {	             
+                   m_saveImage=new SaveImageParam(hwndDlg);
 				}
                 break;
 			}	  
@@ -665,6 +663,7 @@ DWORD WINAPI CMainWindow::ProcessThread()
                 {
                     continue;
                 }
+				savePicture("C:/Users/user/Desktop/kwolek/dataset");
 
                 // Draw skeleton onto depth stream
                 if (m_bIsSkeletonDrawDepth)
@@ -680,7 +679,6 @@ DWORD WINAPI CMainWindow::ProcessThread()
 					m_openCVHelper.applyVime(&m_depthMat);
 				}
 			
-				savePicture("C:/Users/user/Desktop/kwolek/dataset");
                 
 				// Update bitmap for drawing
                 WaitForSingleObject(m_hDepthBitmapMutex, INFINITE);
