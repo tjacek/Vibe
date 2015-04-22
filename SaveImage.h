@@ -15,6 +15,7 @@
 #include "FrameRateTracker.h"
 #include <AtlBase.h>
 #include <AtlConv.h>
+#include "vibe.h"
 
 using std::wstring;
 

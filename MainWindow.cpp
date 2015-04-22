@@ -663,7 +663,7 @@ DWORD WINAPI CMainWindow::ProcessThread()
                 {
                     continue;
                 }
-				savePicture("C:/Users/user/Desktop/kwolek/dataset");
+				
 
                 // Draw skeleton onto depth stream
                 if (m_bIsSkeletonDrawDepth)
@@ -679,7 +679,7 @@ DWORD WINAPI CMainWindow::ProcessThread()
 					m_openCVHelper.applyVime(&m_depthMat);
 				}
 			
-                
+                savePicture("C:/Users/user/Desktop/kwolek/dataset");
 				// Update bitmap for drawing
                 WaitForSingleObject(m_hDepthBitmapMutex, INFINITE);
                 UpdateBitmap(&m_depthMat, &m_hDepthBitmap, &m_bmiDepth);

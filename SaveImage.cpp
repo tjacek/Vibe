@@ -70,7 +70,7 @@ void writeActionHeader(FILE * fp  , int nFrames, int nCols, int nRows){
  void writeFrame(FILE * fp, cv::Mat frame){
    int numCols = frame.cols;
    int numRows = frame.rows;
-	
+DepthImage dimage(&frame);
 	int r,c;
 	//for(h=0; h<height; h++) //for each row
 	int * tempRow = new int[numCols];
@@ -78,7 +78,7 @@ void writeActionHeader(FILE * fp  , int nFrames, int nCols, int nRows){
 	{
 		for(c=0; c<numCols; c++) //for each colume
 		{
-			int temp = (int) (frame.at<uchar>(r,c) );
+			int temp = (int) (dimage.get(r,c) );
 			tempRow[c] = temp;
 		}
 		fwrite(tempRow, 4, numCols, fp);
